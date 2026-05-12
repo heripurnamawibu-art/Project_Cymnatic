@@ -22,13 +22,13 @@ const MOCK_PRODUCTS = [
   { id: 113, title: "Neural Link v1.0", author: "BioHack", price: "0.4", category: "Utility", likes: 567, image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=800&auto=format&fit=crop" },
   { id: 114, title: "Crystal Memory", author: "DataMiner", price: "1.8", category: "Abstract", likes: 882, image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=800&auto=format&fit=crop" },
   { id: 115, title: "Cyberpunk Drifter", author: "StreetLens", price: "0.75", category: "Photography", likes: 334, image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=800&auto=format&fit=crop" },
-  { id: 116, title: "Obsidian Blade", author: "IronSmith", price: "3.2", category: "Gaming", likes: 112, image: "https://images.unsplash.com/photo-1589710788393-d246f73349b7?q=80&w=800&auto=format&fit=crop" },
+  { id: 116, title: "Obsidian Blade", author: "IronSmith", price: "3.2", category: "Gaming", likes: 112, image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=800&auto=format&fit=crop" },
   { id: 117, title: "Vaporwave Sunset", author: "Retrowave", price: "0.55", category: "Art", likes: 954, image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=800&auto=format&fit=crop" },
   { id: 118, title: "Ether Dragon", author: "Mythos", price: "8.8", category: "Rare Collectible", likes: 772, image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" },
   { id: 119, title: "Void Runner X1", author: "AeroDynamics", price: "15.4", category: "Cyber Vehicle", likes: 88, image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=800&auto=format&fit=crop" },
   { id: 120, title: "Singularity Core", author: "BlackHole", price: "50.0", category: "Utility", likes: 34, image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=800&auto=format&fit=crop" },
   { id: 121, title: "Neon Katana", author: "BladeMaster", price: "2.5", category: "Gaming", likes: 642, image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?q=80&w=800&auto=format&fit=crop" },
-  { id: 122, title: "Plasma Grenade", author: "Munitions", price: "0.3", category: "Utility", likes: 123, image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=800&auto=format&fit=crop" },
+  { id: 122, title: "Plasma Grenade", author: "Munitions", price: "0.3", category: "Utility", likes: 123, image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=800&auto=format&fit=crop" },
   { id: 123, title: "Cyber City VR", author: "Matrix", price: "100.0", category: "Virtual Land", likes: 12, image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=800&auto=format&fit=crop" },
   { id: 124, title: "Neural Link v2", author: "BioHack", price: "1.2", category: "Utility", likes: 442, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?q=80&w=800&auto=format&fit=crop" },
   { id: 125, title: "Binary Sunset", author: "PixelArt", price: "0.15", category: "Art", likes: 890, image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" },
@@ -66,6 +66,12 @@ const GlobalProvider = ({ children }) => {
   const [recentlyViewed, setRecentlyViewed] = useState(() => getSaved('crimsontavern_recent', []));
   const [balance, setBalance] = useState(() => getSaved('crimsontavern_balance', 10.00));
   const [ownedItems, setOwnedItems] = useState(() => getSaved('crimsontavern_owned', []));
+  const [userProducts, setUserProducts] = useState(() => getSaved('crimsontavern_user_products', []));
+  
+  // Auction State
+  const [auctionItem, setAuctionItem] = useState(MOCK_PRODUCTS[0]);
+  const [auctionTime, setAuctionTime] = useState(3600); // 1 hour in seconds
+  const [highestBidder, setHighestBidder] = useState(null); // 'user' or null
   
   // UI State
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -85,6 +91,38 @@ const GlobalProvider = ({ children }) => {
   useEffect(() => { window.localStorage.setItem('crimsontavern_recent', JSON.stringify(recentlyViewed)); }, [recentlyViewed]);
   useEffect(() => { window.localStorage.setItem('crimsontavern_balance', JSON.stringify(balance)); }, [balance]);
   useEffect(() => { window.localStorage.setItem('crimsontavern_owned', JSON.stringify(ownedItems)); }, [ownedItems]);
+  useEffect(() => { window.localStorage.setItem('crimsontavern_user_products', JSON.stringify(userProducts)); }, [userProducts]);
+
+  // Auction Timer Logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAuctionTime(prev => {
+        if (prev <= 1) {
+          // Time's up! 
+          if (highestBidder === 'user') {
+            const finalPrice = parseFloat(auctionItem.price);
+            if (balance >= finalPrice) {
+              setBalance(b => b - finalPrice);
+              setOwnedItems(o => [...o, { ...auctionItem, wonAt: new Date().toLocaleString() }]);
+              addNotification(`AUCTION WON! "${auctionItem.title}" is now yours.`, 'success');
+            } else {
+              addNotification(`AUCTION LOST: Insufficient funds to cover final bid!`, 'error');
+            }
+          }
+
+          // Pick a new random product
+          const pool = [...userProducts, ...MOCK_PRODUCTS];
+          const otherProducts = pool.filter(p => p.id !== auctionItem.id);
+          const next = otherProducts[Math.floor(Math.random() * otherProducts.length)] || pool[0];
+          setAuctionItem(next);
+          setHighestBidder(null);
+          return 3600; // Reset to 1 hour
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [auctionItem]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -184,6 +222,36 @@ const GlobalProvider = ({ children }) => {
     return randomProduct;
   };
 
+  const addProduct = (newProduct) => {
+    const product = {
+      ...newProduct,
+      id: `u-${Date.now()}`,
+      author: user?.name || 'Anonymous',
+      likes: 0
+    };
+    setUserProducts(prev => [product, ...prev]);
+    addNotification(`Asset "${product.title}" listed for sale!`, 'success');
+  };
+
+  const placeBid = () => {
+    const increment = 0.5;
+    const newPrice = (parseFloat(auctionItem.price) + increment).toFixed(2);
+    if (balance < newPrice) {
+      addNotification("Insufficient balance to place this bid!", "error");
+      return;
+    }
+    setAuctionItem(prev => ({ ...prev, price: newPrice }));
+    setHighestBidder('user');
+    addNotification(`Bid placed: ${newPrice} ETH. You are currently leading!`, 'success');
+  };
+
+  const removeProduct = (productId) => {
+    setUserProducts(prev => prev.filter(p => p.id !== productId));
+    addNotification("Asset removed from marketplace.", "info");
+  };
+
+  const allProducts = useMemo(() => [...userProducts, ...MOCK_PRODUCTS], [userProducts]);
+
   // Wishlist Logic
   const toggleWishlist = (product) => {
     setWishlist(prev => {
@@ -219,6 +287,8 @@ const GlobalProvider = ({ children }) => {
     wishlist, toggleWishlist,
     user, login, logout, updateProfile, isAuthOpen, setIsAuthOpen,
     balance, setBalance, rollGacha, ownedItems,
+    userProducts, addProduct, removeProduct,
+    auctionItem, auctionTime, highestBidder, placeBid,
     isThemeOpen, setIsThemeOpen,
     isGachaOpen, setIsGachaOpen,
     orders,
@@ -226,7 +296,7 @@ const GlobalProvider = ({ children }) => {
     searchQuery, setSearchQuery,
     currentPage, setCurrentPage,
     notifications, addNotification,
-    products: MOCK_PRODUCTS
+    products: allProducts
   };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
@@ -850,7 +920,7 @@ const DashboardPage = () => {
     if (saved) { window.sessionStorage.removeItem('dashboardTab'); return saved; }
     return 'overview';
   });
-  const { user, logout, updateProfile, orders, wishlist, setCurrentPage } = useContext(GlobalContext);
+  const { user, logout, updateProfile, orders, wishlist, setCurrentPage, userProducts, addProduct, removeProduct } = useContext(GlobalContext);
   const [profileName, setProfileName] = useState(user?.name || '');
   const [profileEmail, setProfileEmail] = useState(user?.email || '');
   const [profileBio, setProfileBio] = useState(user?.bio || '');
@@ -858,7 +928,17 @@ const DashboardPage = () => {
   const totalRevenue = orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0);
   const itemsSold = orders.reduce((sum, o) => sum + (o.items?.length || 0), 0);
 
+  const [isAdding, setIsAdding] = useState(false);
+  const [newProduct, setNewProduct] = useState({ title: '', price: '', category: 'Art', image: '' });
+
   useEffect(() => { lucide.createIcons(); });
+
+  const handleAddProduct = () => {
+    if (!newProduct.title || !newProduct.price || !newProduct.image) return;
+    addProduct(newProduct);
+    setNewProduct({ title: '', price: '', category: 'Art', image: '' });
+    setIsAdding(false);
+  };
 
   const handleSaveProfile = () => {
     updateProfile({ name: profileName, email: profileEmail, bio: profileBio });
@@ -933,18 +1013,99 @@ const DashboardPage = () => {
                   <h1 className="text-3xl font-display font-bold text-white mb-2">My Products</h1>
                   <p className="text-gray-400 font-ui">Manage your listed digital assets.</p>
                 </div>
-                <button className="px-5 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold font-ui text-sm flex items-center gap-2 transition-all shadow-[0_0_15px_var(--glow-color)]">
-                  <i data-lucide="plus" className="w-4 h-4"></i> Add New
+                <button 
+                  onClick={() => setIsAdding(!isAdding)}
+                  className="px-5 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold font-ui text-sm flex items-center gap-2 transition-all shadow-[0_0_15px_var(--glow-color)]"
+                >
+                  <i data-lucide={isAdding ? "x" : "plus"} className="w-4 h-4"></i> {isAdding ? "Cancel" : "Add New"}
                 </button>
               </div>
-              <div className="glass-card rounded-2xl p-8 text-center border-dashed border-2 border-white/10 hover:border-primary-500/50 transition-colors">
-                <i data-lucide="package" className="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
-                <h3 className="text-xl font-bold text-gray-300 mb-2 font-display">No products yet</h3>
-                <p className="text-gray-500 text-sm font-ui mb-6">You haven't listed any digital assets for sale.</p>
-                <button className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white rounded-full font-bold font-ui text-sm transition-all border border-white/10">
-                  Create First Product
-                </button>
-              </div>
+
+              <AnimatePresence>
+                {isAdding && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden mb-8"
+                  >
+                    <div className="glass-card p-6 rounded-2xl border border-primary-500/30">
+                      <h3 className="text-xl font-bold text-white mb-4 font-display">List a New Asset</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input 
+                          type="text" placeholder="Asset Title" 
+                          value={newProduct.title} onChange={e => setNewProduct({...newProduct, title: e.target.value})}
+                          className="bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white font-ui focus:border-primary-500 outline-none" 
+                        />
+                        <input 
+                          type="text" placeholder="Price (ETH)" 
+                          value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})}
+                          className="bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white font-ui focus:border-primary-500 outline-none" 
+                        />
+                        <select 
+                          value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})}
+                          className="bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white font-ui focus:border-primary-500 outline-none"
+                        >
+                          <option>Art</option>
+                          <option>Gaming</option>
+                          <option>Music</option>
+                          <option>Photography</option>
+                          <option>Sci-Fi</option>
+                        </select>
+                        <input 
+                          type="text" placeholder="Image URL (Unsplash/Direct)" 
+                          value={newProduct.image} onChange={e => setNewProduct({...newProduct, image: e.target.value})}
+                          className="bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white font-ui focus:border-primary-500 outline-none" 
+                        />
+                      </div>
+                      <button 
+                        onClick={handleAddProduct}
+                        className="w-full py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_var(--glow-color)]"
+                      >
+                        List Asset Now
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {userProducts.length === 0 ? (
+                <div className="glass-card rounded-2xl p-8 text-center border-dashed border-2 border-white/10 hover:border-primary-500/50 transition-colors">
+                  <i data-lucide="package" className="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
+                  <h3 className="text-xl font-bold text-gray-300 mb-2 font-display">No products yet</h3>
+                  <p className="text-gray-500 text-sm font-ui mb-6">You haven't listed any digital assets for sale.</p>
+                  <button onClick={() => setIsAdding(true)} className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white rounded-full font-bold font-ui text-sm transition-all border border-white/10">
+                    Create First Product
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {userProducts.map(product => (
+                    <div key={product.id} className="glass-card rounded-2xl overflow-hidden group">
+                      <div className="relative aspect-video overflow-hidden">
+                        <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                        <div className="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Active</div>
+                      </div>
+                      <div className="p-4">
+                        <h4 className="font-bold text-white font-display mb-1">{product.title}</h4>
+                        <div className="flex justify-between items-center mt-3 pt-3 border-t border-white/5">
+                          <div className="flex flex-col">
+                            <span className="text-xs text-gray-500 font-ui uppercase">{product.category}</span>
+                            <span className="text-primary-400 font-bold font-display">{product.price} ETH</span>
+                          </div>
+                          <button 
+                            onClick={() => removeProduct(product.id)}
+                            className="p-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-lg transition-all border border-red-500/20"
+                            title="Delete Listing"
+                          >
+                            <i data-lucide="trash-2" className="w-4 h-4"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -1065,8 +1226,15 @@ const DashboardPage = () => {
 // --- SECTION COMPONENTS ---
 
 const HeroSection = () => {
-  const { setCurrentPage } = useContext(GlobalContext);
+  const { setCurrentPage, auctionItem, auctionTime, highestBidder, placeBid } = useContext(GlobalContext);
   useEffect(() => { lucide.createIcons(); });
+
+  const formatTime = (seconds) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
   
   return (
     <section className="pt-32 pb-20 md:pt-48 md:pb-32 px-6 md:px-12 container mx-auto">
@@ -1089,26 +1257,38 @@ const HeroSection = () => {
           
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
             <button 
-              onClick={() => setCurrentPage('discover')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_var(--glow-color)] hover:shadow-[0_0_30px_var(--glow-color)] flex items-center justify-center gap-2 group font-ui"
+              onClick={placeBid}
+              className="w-full sm:w-auto px-10 py-4 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_var(--glow-color)] hover:shadow-[0_0_30px_var(--glow-color)] flex items-center justify-center gap-3 group font-ui"
             >
-              Enter Marketplace
-              <i data-lucide="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+              <i data-lucide="gavel" className="w-5 h-5 group-hover:rotate-[-20deg] transition-transform"></i>
+              Place Bid (+0.5 ETH)
             </button>
             <button 
-              onClick={() => window.open('https://www.youtube.com/watch?v=LRE_fT_vM_A', '_blank')} 
+              onClick={() => setCurrentPage('discover')}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl glass hover:bg-white/10 text-white font-bold transition-all duration-300 flex items-center justify-center gap-2 font-ui"
+            >
+              Explore Marketplace
+            </button>
+            <button 
+              onClick={() => window.open('https://antigravity.google', '_blank')} 
               className="w-full sm:w-auto px-8 py-4 rounded-xl glass hover:bg-white/10 text-white font-bold transition-all duration-300 flex items-center justify-center gap-2 font-ui"
             >
               <i data-lucide="play" className="w-4 h-4 text-primary-400"></i>
               Watch Demo
             </button>
           </motion.div>
+          
+          {highestBidder === 'user' && (
+            <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-emerald-400 text-sm font-bold font-ui mt-4 flex items-center gap-2 justify-center lg:justify-start">
+              <i data-lucide="check-circle" className="w-4 h-4"></i> You are currently the highest bidder!
+            </motion.p>
+          )}
         </div>
         
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.8 }} className="flex-1 relative w-full max-w-lg lg:max-w-none perspective-1000">
           <div className="relative z-10 rounded-3xl overflow-hidden glass-card p-4">
             <div className="relative rounded-2xl overflow-hidden aspect-[4/5] group">
-              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" alt="Featured Art" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+              <img src={auctionItem.image} alt={auctionItem.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-900/40 to-transparent opacity-90"></div>
               
               <div className="absolute top-4 right-4 glass px-4 py-2 rounded-full backdrop-blur-md border-primary-500/30 flex items-center gap-2">
@@ -1118,17 +1298,17 @@ const HeroSection = () => {
 
               <div className="absolute bottom-0 left-0 w-full p-6 flex justify-between items-end">
                 <div>
-                  <h3 className="text-2xl font-bold font-display mb-2 text-white">Crimson Nexus</h3>
+                  <h3 className="text-2xl font-bold font-display mb-2 text-white">{auctionItem.title}</h3>
                   <div className="flex items-center gap-3">
-                    <img src="https://i.pravatar.cc/100?img=33" className="w-8 h-8 rounded-full border-2 border-primary-500" />
-                    <p className="text-gray-300 text-sm font-ui font-medium">@alexart_sys</p>
+                    <img src={`https://i.pravatar.cc/100?img=${auctionItem.id % 70}`} className="w-8 h-8 rounded-full border-2 border-primary-500" />
+                    <p className="text-gray-300 text-sm font-ui font-medium">@{auctionItem.author}</p>
                   </div>
                 </div>
                 <div className="glass px-5 py-3 rounded-2xl text-right border-primary-500/20 shadow-[0_0_15px_var(--glow-color)]">
                   <p className="text-xs text-gray-400 mb-1 font-ui">Current Bid</p>
                   <p className="text-xl font-bold text-primary-400 flex items-center gap-1 font-display">
                     <i data-lucide="gem" className="w-4 h-4"></i>
-                    4.20 ETH
+                    {auctionItem.price} ETH
                   </p>
                 </div>
               </div>
@@ -1142,7 +1322,7 @@ const HeroSection = () => {
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 font-ui uppercase tracking-wider mb-1">Ends in</p>
-                  <p className="font-bold text-lg font-cyber text-white tracking-widest">04:20:00</p>
+                  <p className="font-bold text-lg font-cyber text-white tracking-widest">{formatTime(auctionTime)}</p>
                 </div>
               </div>
             </motion.div>
@@ -1212,21 +1392,35 @@ const FeaturedProducts = () => {
 };
 
 const ExploreProducts = () => {
-  const { addToCart, toggleWishlist, wishlist, products, searchQuery, setSearchQuery, trackView } = useContext(GlobalContext);
+  const { addToCart, toggleWishlist, wishlist, products, searchQuery, setSearchQuery, trackView, auctionItem, auctionTime, placeBid, highestBidder } = useContext(GlobalContext);
   const [activeFilter, setActiveFilter] = useState('All');
   const [sortBy, setSortBy] = useState('default');
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const filters = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Abstract', 'Sci-Fi', 'Cyber Architecture', 'Digital Avatar', 'Virtual Land', 'Utility', 'Rare Collectible', 'Cyber Vehicle'];
 
+  const formatTime = (seconds) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   useEffect(() => { setLocalSearch(searchQuery); }, [searchQuery]);
   useEffect(() => { lucide.createIcons(); });
 
   const displayedProducts = useMemo(() => {
-    let result = products;
-    if (localSearch) result = result.filter(p => p.title.toLowerCase().includes(localSearch.toLowerCase()) || p.author.toLowerCase().includes(localSearch.toLowerCase()) || p.category.toLowerCase().includes(localSearch.toLowerCase()));
+    let result = products || [];
+    if (localSearch) {
+      const search = localSearch.toLowerCase();
+      result = result.filter(p => 
+        (p.title?.toLowerCase() || "").includes(search) || 
+        (p.author?.toLowerCase() || "").includes(search) || 
+        (p.category?.toLowerCase() || "").includes(search)
+      );
+    }
     if (activeFilter !== 'All') result = result.filter(p => p.category === activeFilter);
-    if (sortBy === 'price_asc') result = [...result].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    else if (sortBy === 'price_desc') result = [...result].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    if (sortBy === 'price_asc') result = [...result].sort((a, b) => parseFloat(a.price || 0) - parseFloat(b.price || 0));
+    else if (sortBy === 'price_desc') result = [...result].sort((a, b) => parseFloat(b.price || 0) - parseFloat(a.price || 0));
     else if (sortBy === 'likes') result = [...result].sort((a, b) => (b.likes || 0) - (a.likes || 0));
     return result;
   }, [products, localSearch, activeFilter, sortBy]);
@@ -1245,6 +1439,39 @@ const ExploreProducts = () => {
     <section className="py-20 px-6 md:px-12 container mx-auto border-t border-white/5 relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/5 rounded-full blur-[120px] pointer-events-none"></div>
       
+      {/* Live Auction Banner for Discover Page */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }} 
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card mb-16 p-6 rounded-3xl border border-primary-500/30 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-3 bg-primary-600/20 text-primary-400 text-[10px] font-bold uppercase tracking-widest rounded-bl-xl border-l border-b border-primary-500/30">Live Auction</div>
+        <div className="w-full md:w-48 aspect-square rounded-2xl overflow-hidden shadow-2xl">
+          <img src={auctionItem.image} alt={auctionItem.title} className="w-full h-full object-cover" />
+        </div>
+        <div className="flex-1 text-center md:text-left">
+          <h3 className="text-2xl font-bold font-display text-white mb-2">{auctionItem.title}</h3>
+          <p className="text-gray-400 font-ui mb-4">Current Price: <span className="text-primary-400 font-bold">{auctionItem.price} ETH</span></p>
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+            <div className="glass px-4 py-2 rounded-xl flex items-center gap-3">
+              <i data-lucide="clock" className="w-4 h-4 text-primary-500"></i>
+              <span className="font-cyber font-bold text-white tracking-widest">{formatTime(auctionTime)}</span>
+            </div>
+            <button 
+              onClick={placeBid}
+              className="px-8 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_var(--glow-color)] flex items-center gap-2"
+            >
+              <i data-lucide="gavel" className="w-4 h-4"></i> Place Bid
+            </button>
+          </div>
+          {highestBidder === 'user' && (
+            <p className="text-emerald-400 text-xs font-bold font-ui mt-3 flex items-center gap-1 justify-center md:justify-start">
+              <i data-lucide="check" className="w-3 h-3"></i> You are leading the bid
+            </p>
+          )}
+        </div>
+      </motion.div>
+
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 gap-8 relative z-10">
         <div>
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-white">Explore <span className="text-primary-500">Collection</span></h2>
@@ -1599,7 +1826,7 @@ const AIChatWidget = () => {
 
 const CheatMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { addNotification, setTheme, user, updateProfile } = useContext(GlobalContext);
+  const { addNotification, setTheme, user, updateProfile, setBalance, balance } = useContext(GlobalContext);
   const [konamiIdx, setKonamiIdx] = useState(0);
   const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
@@ -1640,7 +1867,9 @@ const CheatMenu = () => {
   const runCheat = (action) => {
     switch(action) {
       case 'add_eth':
-        addNotification('INJECTING 10.00 ETH INTO WALLET...', 'success');
+        const newBalance = Number(balance) + 10.0;
+        setBalance(newBalance);
+        addNotification(`INJECTED 10.00 ETH. NEW BALANCE: ${newBalance.toFixed(2)} ETH`, 'success');
         break;
       case 'admin':
         if (user) {
@@ -1651,8 +1880,12 @@ const CheatMenu = () => {
         }
         break;
       case 'glitch':
-        document.documentElement.classList.toggle('glitch-active');
-        addNotification('VISUAL OVERRIDE TOGGLED', 'warning');
+        document.documentElement.classList.add('glitch-active');
+        addNotification('CRITICAL SYSTEM ANOMALY DETECTED', 'warning');
+        setTimeout(() => {
+          document.documentElement.classList.remove('glitch-active');
+          addNotification('SYSTEM STABILIZED', 'success');
+        }, 10000); // 10 seconds
         break;
       case 'clear':
         localStorage.clear();
