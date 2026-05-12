@@ -15,6 +15,28 @@ const MOCK_PRODUCTS = [
   { id: 106, title: "Astro Explorer", author: "Cosmos", price: "2.0", category: "Gaming", image: "https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=800&auto=format&fit=crop", likes: 322 },
   { id: 107, title: "LoFi Study", author: "ChillVibes", price: "0.1", category: "Music", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop", likes: 890 },
   { id: 108, title: "Midnight Alley", author: "DarkRoom", price: "0.6", category: "Photography", image: "https://images.unsplash.com/photo-1493606371202-6275828f90f3?q=80&w=800&auto=format&fit=crop", likes: 115 },
+  { id: 109, title: "Quantum Reactor", author: "TechCore", price: "4.2", category: "Sci-Fi", likes: 1250, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop" },
+  { id: 110, title: "Emerald Citadel", author: "Archivist", price: "12.5", category: "Cyber Architecture", likes: 89, image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop" },
+  { id: 111, title: "Glitch Girl v2", author: "DigitalGhost", price: "0.95", category: "Digital Avatar", likes: 2104, image: "https://images.unsplash.com/photo-1544652478-6653e09f18a2?q=80&w=800&auto=format&fit=crop" },
+  { id: 112, title: "Neon District Plot", author: "LandLord", price: "25.0", category: "Virtual Land", likes: 45, image: "https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=800&auto=format&fit=crop" },
+  { id: 113, title: "Neural Link v1.0", author: "BioHack", price: "0.4", category: "Utility", likes: 567, image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=800&auto=format&fit=crop" },
+  { id: 114, title: "Crystal Memory", author: "DataMiner", price: "1.8", category: "Abstract", likes: 882, image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=800&auto=format&fit=crop" },
+  { id: 115, title: "Cyberpunk Drifter", author: "StreetLens", price: "0.75", category: "Photography", likes: 334, image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=800&auto=format&fit=crop" },
+  { id: 116, title: "Obsidian Blade", author: "IronSmith", price: "3.2", category: "Gaming", likes: 112, image: "https://images.unsplash.com/photo-1589710788393-d246f73349b7?q=80&w=800&auto=format&fit=crop" },
+  { id: 117, title: "Vaporwave Sunset", author: "Retrowave", price: "0.55", category: "Art", likes: 954, image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=800&auto=format&fit=crop" },
+  { id: 118, title: "Ether Dragon", author: "Mythos", price: "8.8", category: "Rare Collectible", likes: 772, image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" },
+  { id: 119, title: "Void Runner X1", author: "AeroDynamics", price: "15.4", category: "Cyber Vehicle", likes: 88, image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=800&auto=format&fit=crop" },
+  { id: 120, title: "Singularity Core", author: "BlackHole", price: "50.0", category: "Utility", likes: 34, image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=800&auto=format&fit=crop" },
+  { id: 121, title: "Neon Katana", author: "BladeMaster", price: "2.5", category: "Gaming", likes: 642, image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?q=80&w=800&auto=format&fit=crop" },
+  { id: 122, title: "Plasma Grenade", author: "Munitions", price: "0.3", category: "Utility", likes: 123, image: "https://images.unsplash.com/photo-1595113316349-9fa4ee24f884?q=80&w=800&auto=format&fit=crop" },
+  { id: 123, title: "Cyber City VR", author: "Matrix", price: "100.0", category: "Virtual Land", likes: 12, image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=800&auto=format&fit=crop" },
+  { id: 124, title: "Neural Link v2", author: "BioHack", price: "1.2", category: "Utility", likes: 442, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?q=80&w=800&auto=format&fit=crop" },
+  { id: 125, title: "Binary Sunset", author: "PixelArt", price: "0.15", category: "Art", likes: 890, image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" },
+  { id: 126, title: "Cyber Owl", author: "NatureAI", price: "3.8", category: "Digital Avatar", likes: 556, image: "https://images.unsplash.com/photo-1544652478-6653e09f18a2?q=80&w=800&auto=format&fit=crop" },
+  { id: 127, title: "Circuit Board", author: "Hardware", price: "0.8", category: "Photography", likes: 231, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop" },
+  { id: 128, title: "Gravity Boots", author: "AeroDynamics", price: "2.2", category: "Gaming", likes: 118, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop" },
+  { id: 129, title: "Deep Sea Cyber", author: "Abyssal", price: "4.5", category: "Photography", likes: 98, image: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=800&auto=format&fit=crop" },
+  { id: 130, title: "Data Stream", author: "Hackers", price: "0.65", category: "Abstract", likes: 672, image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" },
 ];
 
 // --- CONTEXT API ---
@@ -31,7 +53,10 @@ const GlobalProvider = ({ children }) => {
   };
 
   // Core State
-  const [theme, setTheme] = useState(() => getSaved('crimsontavern_theme', 'crimson'));
+  const [theme, setTheme] = useState(() => {
+    const saved = getSaved('crimsontavern_theme', 'crimson');
+    return typeof saved === 'string' ? saved : 'crimson';
+  });
   const [cart, setCart] = useState(() => getSaved('crimsontavern_cart', []));
   const [wishlist, setWishlist] = useState(() => getSaved('crimsontavern_wishlist', []));
   
@@ -39,11 +64,14 @@ const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState(() => getSaved('crimsontavern_user', null));
   const [orders, setOrders] = useState(() => getSaved('crimsontavern_orders', []));
   const [recentlyViewed, setRecentlyViewed] = useState(() => getSaved('crimsontavern_recent', []));
+  const [balance, setBalance] = useState(() => getSaved('crimsontavern_balance', 10.00));
+  const [ownedItems, setOwnedItems] = useState(() => getSaved('crimsontavern_owned', []));
   
   // UI State
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isGachaOpen, setIsGachaOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([]);
@@ -55,6 +83,8 @@ const GlobalProvider = ({ children }) => {
   useEffect(() => { window.localStorage.setItem('crimsontavern_user', JSON.stringify(user)); }, [user]);
   useEffect(() => { window.localStorage.setItem('crimsontavern_orders', JSON.stringify(orders)); }, [orders]);
   useEffect(() => { window.localStorage.setItem('crimsontavern_recent', JSON.stringify(recentlyViewed)); }, [recentlyViewed]);
+  useEffect(() => { window.localStorage.setItem('crimsontavern_balance', JSON.stringify(balance)); }, [balance]);
+  useEffect(() => { window.localStorage.setItem('crimsontavern_owned', JSON.stringify(ownedItems)); }, [ownedItems]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -136,8 +166,22 @@ const GlobalProvider = ({ children }) => {
     };
     setOrders(prev => [newOrder, ...prev]);
     setCart([]);
+    setBalance(prev => prev - total);
     setIsCartOpen(false);
-    addNotification('Purchase successful! Assets added to your collection.', 'success');
+    addNotification(`Order ${newOrder.id} confirmed! Thank you for your purchase.`, 'success');
+  };
+
+  const rollGacha = () => {
+    const COST = 0.5;
+    if (balance < COST) {
+      addNotification("Insufficient balance for Gacha!", "error");
+      return;
+    }
+    setBalance(prev => prev - COST);
+    const randomProduct = MOCK_PRODUCTS[Math.floor(Math.random() * MOCK_PRODUCTS.length)];
+    setOwnedItems(prev => [...prev, { ...randomProduct, wonAt: new Date().toLocaleString() }]);
+    addNotification(`CONGRATULATIONS! You won: ${randomProduct.title}`, 'success');
+    return randomProduct;
   };
 
   // Wishlist Logic
@@ -174,6 +218,9 @@ const GlobalProvider = ({ children }) => {
     cart, addToCart, removeFromCart, updateQuantity, checkout, isCartOpen, setIsCartOpen,
     wishlist, toggleWishlist,
     user, login, logout, updateProfile, isAuthOpen, setIsAuthOpen,
+    balance, setBalance, rollGacha, ownedItems,
+    isThemeOpen, setIsThemeOpen,
+    isGachaOpen, setIsGachaOpen,
     orders,
     recentlyViewed, trackView,
     searchQuery, setSearchQuery,
@@ -500,7 +547,8 @@ const Navbar = () => {
   const [logoGlow, setLogoGlow] = useState(false);
   const clickTimerRef = useRef(null);
 
-  const { cart, wishlist, setIsCartOpen, setCurrentPage, currentPage, user, setIsAuthOpen, setSearchQuery } = useContext(GlobalContext);
+  const { cart, wishlist, setIsCartOpen, setCurrentPage, currentPage, user, setIsAuthOpen, setSearchQuery, balance, rollGacha, isGachaOpen, setIsGachaOpen } = useContext(GlobalContext);
+  const [gachaResult, setGachaResult] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -540,6 +588,14 @@ const Navbar = () => {
         setClickCount(0);
         setCurrentPage('home');
       }, 2000);
+    }
+  };
+
+  const handleGacha = () => {
+    const result = rollGacha();
+    if (result) {
+      setGachaResult(result);
+      setIsGachaOpen(true);
     }
   };
 
@@ -639,6 +695,53 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
+      {/* Gacha Result Modal */}
+      <AnimatePresence>
+        {isGachaOpen && gachaResult && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[250] flex items-center justify-center p-6"
+            onClick={() => setIsGachaOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.5, y: 100, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.5, y: 100, opacity: 0 }}
+              className="glass-card max-w-md w-full rounded-[40px] p-8 border-2 border-primary-500 shadow-[0_0_100px_var(--glow-color)] text-center relative overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-500 via-white to-primary-500 animate-pulse"></div>
+              
+              <div className="mb-6">
+                <div className="w-24 h-24 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-primary-500/30">
+                  <i data-lucide="sparkles" className="w-12 h-12 text-primary-400 animate-spin-slow"></i>
+                </div>
+                <h2 className="text-3xl font-cyber font-bold text-white tracking-widest mb-2">SYSTEM UNLOCKED</h2>
+                <p className="text-primary-400 font-ui font-bold">GACHA REWARD ACQUIRED</p>
+              </div>
+
+              <div className="relative rounded-2xl overflow-hidden aspect-square mb-8 border border-white/10">
+                <img src={gachaResult.image} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-950 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 text-left">
+                  <p className="text-xs text-primary-400 font-cyber mb-1">{gachaResult.category}</p>
+                  <h3 className="text-xl font-bold font-display text-white">{gachaResult.title}</h3>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setIsGachaOpen(false)}
+                className="w-full py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold font-cyber tracking-widest rounded-2xl transition-all shadow-[0_0_30px_var(--glow-color)]"
+              >
+                CLAIM ASSET
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'glass py-3 border-b border-white/5' : 'py-5 bg-transparent'}`}>
         <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo with triple-click Easter egg */}
@@ -683,6 +786,16 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            <div className="hidden xl:flex items-center gap-3 bg-dark-900/80 px-4 py-1.5 rounded-full border border-primary-500/30">
+              <i data-lucide="wallet" className="w-4 h-4 text-primary-400"></i>
+              <span className="text-sm font-bold font-display text-white">{balance.toFixed(2)} ETH</span>
+              <button 
+                onClick={handleGacha}
+                className="ml-2 px-3 py-1 bg-primary-600 hover:bg-primary-500 text-white text-[10px] font-cyber font-extrabold rounded-md transition-all animate-pulse-glow"
+              >
+                GACHA
+              </button>
+            </div>
             <div className="hidden lg:flex relative">
               <i data-lucide="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
               <input 
@@ -952,6 +1065,7 @@ const DashboardPage = () => {
 // --- SECTION COMPONENTS ---
 
 const HeroSection = () => {
+  const { setCurrentPage } = useContext(GlobalContext);
   useEffect(() => { lucide.createIcons(); });
   
   return (
@@ -974,11 +1088,17 @@ const HeroSection = () => {
           </motion.p>
           
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_var(--glow-color)] hover:shadow-[0_0_30px_var(--glow-color)] flex items-center justify-center gap-2 group font-ui">
+            <button 
+              onClick={() => setCurrentPage('discover')}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_var(--glow-color)] hover:shadow-[0_0_30px_var(--glow-color)] flex items-center justify-center gap-2 group font-ui"
+            >
               Enter Marketplace
               <i data-lucide="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 rounded-xl glass hover:bg-white/10 text-white font-bold transition-all duration-300 flex items-center justify-center gap-2 font-ui">
+            <button 
+              onClick={() => window.open('https://www.youtube.com/watch?v=LRE_fT_vM_A', '_blank')} 
+              className="w-full sm:w-auto px-8 py-4 rounded-xl glass hover:bg-white/10 text-white font-bold transition-all duration-300 flex items-center justify-center gap-2 font-ui"
+            >
               <i data-lucide="play" className="w-4 h-4 text-primary-400"></i>
               Watch Demo
             </button>
@@ -1096,7 +1216,7 @@ const ExploreProducts = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [sortBy, setSortBy] = useState('default');
   const [localSearch, setLocalSearch] = useState(searchQuery);
-  const filters = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Abstract', 'Sci-Fi', 'Space', 'Surreal'];
+  const filters = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Abstract', 'Sci-Fi', 'Cyber Architecture', 'Digital Avatar', 'Virtual Land', 'Utility', 'Rare Collectible', 'Cyber Vehicle'];
 
   useEffect(() => { setLocalSearch(searchQuery); }, [searchQuery]);
   useEffect(() => { lucide.createIcons(); });
@@ -1477,6 +1597,142 @@ const AIChatWidget = () => {
   );
 };
 
+const CheatMenu = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { addNotification, setTheme, user, updateProfile } = useContext(GlobalContext);
+  const [konamiIdx, setKonamiIdx] = useState(0);
+  const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.shiftKey && e.altKey && e.key.toLowerCase() === 'x') {
+        setIsOpen(prev => !prev);
+      }
+      
+      if (e.key === konami[konamiIdx]) {
+        if (konamiIdx === konami.length - 1) {
+          setIsOpen(true);
+          setKonamiIdx(0);
+          addNotification('PROTOCOL OVERRIDE: CHEAT MENU UNLOCKED', 'success');
+        } else {
+          setKonamiIdx(prev => prev + 1);
+        }
+      } else {
+        setKonamiIdx(0);
+      }
+    };
+
+    const handleCustomOpen = () => {
+      setIsOpen(true);
+      addNotification('HIDDEN ACCESS GRANTED', 'success');
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('openCheatMenu', handleCustomOpen);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('openCheatMenu', handleCustomOpen);
+    };
+  }, [konamiIdx]);
+
+  useEffect(() => { if (isOpen) lucide.createIcons(); }, [isOpen]);
+
+  const runCheat = (action) => {
+    switch(action) {
+      case 'add_eth':
+        addNotification('INJECTING 10.00 ETH INTO WALLET...', 'success');
+        break;
+      case 'admin':
+        if (user) {
+          updateProfile({ ...user, name: 'ADMIN_' + (user.name || 'User'), isAdmin: true });
+          addNotification('ADMIN PRIVILEGES GRANTED', 'success');
+        } else {
+          addNotification('ERROR: NO USER CONNECTED', 'error');
+        }
+        break;
+      case 'glitch':
+        document.documentElement.classList.toggle('glitch-active');
+        addNotification('VISUAL OVERRIDE TOGGLED', 'warning');
+        break;
+      case 'clear':
+        localStorage.clear();
+        sessionStorage.clear();
+        addNotification('STORAGE WIPED. RELOADING...', 'error');
+        setTimeout(() => window.location.reload(), 1500);
+        break;
+      case 'theme_gold':
+        setTheme('gold');
+        addNotification('THEME FORCED: AURUM', 'success');
+        break;
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+          animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+          exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-dark-950/60"
+          onClick={() => setIsOpen(false)}
+        >
+          <motion.div 
+            initial={{ scale: 0.8, y: 50, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.8, y: 50, opacity: 0 }}
+            className="w-full max-w-lg glass-card border-2 border-primary-500/50 shadow-[0_0_50px_var(--glow-color)] overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="bg-primary-600/20 p-6 flex justify-between items-center border-b border-primary-500/30">
+              <div className="flex items-center gap-3">
+                <i data-lucide="terminal" className="text-primary-400 w-6 h-6"></i>
+                <h2 className="font-cyber font-bold text-xl tracking-[0.2em] text-white">DEVELOPER TERMINAL</h2>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="hover:text-primary-400 transition-colors text-white">
+                <i data-lucide="x" className="w-6 h-6"></i>
+              </button>
+            </div>
+            
+            <div className="p-8 space-y-6 bg-dark-950/40">
+              <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => runCheat('add_eth')} className="flex flex-col items-center gap-3 p-6 rounded-2xl glass hover:bg-primary-500/20 transition-all border border-white/5 group">
+                  <i data-lucide="gem" className="w-8 h-8 text-primary-400 group-hover:scale-110 transition-transform"></i>
+                  <span className="text-xs font-bold font-cyber text-gray-300">ADD 10 ETH</span>
+                </button>
+                <button onClick={() => runCheat('admin')} className="flex flex-col items-center gap-3 p-6 rounded-2xl glass hover:bg-primary-500/20 transition-all border border-white/5 group">
+                  <i data-lucide="shield-check" className="w-8 h-8 text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                  <span className="text-xs font-bold font-cyber text-gray-300">ADMIN MODE</span>
+                </button>
+                <button onClick={() => runCheat('glitch')} className="flex flex-col items-center gap-3 p-6 rounded-2xl glass hover:bg-primary-500/20 transition-all border border-white/5 group">
+                  <i data-lucide="zap" className="w-8 h-8 text-yellow-400 group-hover:scale-110 transition-transform"></i>
+                  <span className="text-xs font-bold font-cyber text-gray-300">GLITCH EFFECT</span>
+                </button>
+                <button onClick={() => runCheat('theme_gold')} className="flex flex-col items-center gap-3 p-6 rounded-2xl glass hover:bg-primary-500/20 transition-all border border-white/5 group">
+                  <i data-lucide="palette" className="w-8 h-8 text-amber-500 group-hover:scale-110 transition-transform"></i>
+                  <span className="text-xs font-bold font-cyber text-gray-300">GOLD THEME</span>
+                </button>
+              </div>
+              
+              <div className="p-4 rounded-xl bg-dark-900 border border-white/5 space-y-2">
+                <p className="text-[10px] font-mono text-primary-500/70 uppercase">System Stats</p>
+                <div className="flex justify-between text-xs font-mono text-gray-500">
+                  <span>Protocol:</span>
+                  <span className="text-primary-400">v4.2.0-STABLE</span>
+                </div>
+              </div>
+              
+              <button onClick={() => runCheat('clear')} className="w-full py-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-bold font-cyber text-sm tracking-widest transition-all">
+                WIPE ALL DATA
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const AppContent = () => {
   const { currentPage } = useContext(GlobalContext);
 
@@ -1500,6 +1756,7 @@ const AppContent = () => {
       <CartDrawer />
       <ThemeCustomizer />
       <AIChatWidget />
+      <CheatMenu />
       <RealtimeActivityFeed />
       <NotificationSystem />
     </div>
