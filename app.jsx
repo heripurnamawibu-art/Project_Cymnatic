@@ -122,7 +122,8 @@ const GlobalProvider = ({ children }) => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [auctionItem]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auctionItem, highestBidder, balance, userProducts]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -236,7 +237,7 @@ const GlobalProvider = ({ children }) => {
   const placeBid = () => {
     const increment = 0.5;
     const newPrice = (parseFloat(auctionItem.price) + increment).toFixed(2);
-    if (balance < newPrice) {
+    if (balance < parseFloat(newPrice)) {
       addNotification("Insufficient balance to place this bid!", "error");
       return;
     }
@@ -317,15 +318,28 @@ const NotificationSystem = () => {
             initial={{ opacity: 0, x: -50, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="glass px-4 py-3 rounded-xl border-l-4 border-primary-500 shadow-lg flex items-center gap-3 w-72"
+            className={`glass px-4 py-3 rounded-xl border-l-4 shadow-lg flex items-center gap-3 w-72 ${
+              note.type === 'success' ? 'border-emerald-500' :
+              note.type === 'error' ? 'border-red-500' :
+              note.type === 'warning' ? 'border-yellow-500' :
+              'border-blue-500'
+            }`}
           >
             {note.type === 'success' ? (
-              <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center">
-                <i data-lucide="check" className="w-4 h-4 text-primary-500"></i>
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <i data-lucide="check" className="w-4 h-4 text-emerald-400"></i>
+              </div>
+            ) : note.type === 'error' ? (
+              <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                <i data-lucide="x-circle" className="w-4 h-4 text-red-400"></i>
+              </div>
+            ) : note.type === 'warning' ? (
+              <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                <i data-lucide="alert-triangle" className="w-4 h-4 text-yellow-400"></i>
               </div>
             ) : (
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <i data-lucide="info" className="w-4 h-4 text-blue-500"></i>
+                <i data-lucide="info" className="w-4 h-4 text-blue-400"></i>
               </div>
             )}
             <p className="text-sm font-ui text-gray-200">{note.message}</p>
@@ -1300,7 +1314,7 @@ const HeroSection = () => {
                 <div>
                   <h3 className="text-2xl font-bold font-display mb-2 text-white">{auctionItem.title}</h3>
                   <div className="flex items-center gap-3">
-                    <img src={`https://i.pravatar.cc/100?img=${auctionItem.id % 70}`} className="w-8 h-8 rounded-full border-2 border-primary-500" />
+                    <img src={`https://i.pravatar.cc/100?img=${(parseInt(auctionItem.id) || 1) % 70 || 1}`} className="w-8 h-8 rounded-full border-2 border-primary-500" />
                     <p className="text-gray-300 text-sm font-ui font-medium">@{auctionItem.author}</p>
                   </div>
                 </div>
@@ -1866,11 +1880,12 @@ const CheatMenu = () => {
 
   const runCheat = (action) => {
     switch(action) {
-      case 'add_eth':
+      case 'add_eth': {
         const newBalance = Number(balance) + 10.0;
         setBalance(newBalance);
         addNotification(`INJECTED 10.00 ETH. NEW BALANCE: ${newBalance.toFixed(2)} ETH`, 'success');
         break;
+      }
       case 'admin':
         if (user) {
           updateProfile({ ...user, name: 'ADMIN_' + (user.name || 'User'), isAdmin: true });
